@@ -33,32 +33,6 @@ Dota 2 Silencer Mod
 👉 ValveResourceFormat Releases
 Выбери cli-windows-x64.zip (последняя версия), распакуй и положи vrf_cli.exe в папку tools/vrf/.
 
-3. Структура папок после установки инструментов:
-text
-dota-sound-silencer/
-├── tools/
-│   ├── vpk/
-│   │   ├── vpk.exe
-│   │   ├── tier0.dll
-│   │   ├── vstdlib.dll
-│   │   └── ... (другие dll)
-│   └── vrf/
-│       ├── vrf_cli.exe
-│       ├── blake3_dotnet.dll
-│       ├── libSkiaSharp.dll
-│       ├── spirv-cross.dll
-│       └── TinyEXRNative.dll
-├── src/
-│   ├── main.py
-│   ├── app.py
-│   ├── core/
-│   ├── ui/
-│   ├── utils/
-│   ├── data/
-│   └── assets/
-├── buildbuild.spec
-├── requirements.txt
-└── README.md
 🚀 Как пользоваться (готовый .exe)
 Скачай последний релиз с GitHub (файл DotaSoundSilencer.exe).
 
