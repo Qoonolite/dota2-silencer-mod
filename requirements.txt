@@ -1,0 +1,4 @@
+PyQt6==6.6.1
+numpy==1.26.4
+vdf==3.4
+pyinstaller==6.5.0

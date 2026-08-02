@@ -1,0 +1,26 @@
+﻿# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+ENV/
+dist/
+build/
+*.spec
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Логи
+logs/
+*.log
+
+# Большие бинарные файлы (исключаем из репозитория)
+tools/vpk/*.exe
+tools/vpk/*.dll
+tools/vrf/*.exe
+tools/vrf/*.dll
