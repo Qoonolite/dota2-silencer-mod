@@ -17,13 +17,12 @@ Dota 2 Silencer Mod
 Установленный vrf_cli.exe (ValveResourceFormat) – для чтения VPK-архивов.
 
 📦 Где взять инструменты?
-Инструменты не входят в репозиторий из-за большого размера. Скачай их отдельно:
 1. vpk.exe (Source 1 Tools)
 Входит в состав Source SDK или может быть взят из старых установок Steam.
-Если у тебя нет – скачай архив с готовыми файлами (ссылка будет в релизе).
 2. vrf_cli.exe (ValveResourceFormat)
 Скачай с официального репозитория:
 👉 ValveResourceFormat Releases
+https://github.com/ValveResourceFormat/ValveResourceFormat/
 Выбери cli-windows-x64.zip (последняя версия), распакуй и положи vrf_cli.exe в папку tools/vrf/.
 
 🚀 Как пользоваться (готовый .exe)
