@@ -1,10 +1,11 @@
 import html
 import traceback
 from pathlib import Path
+from typing import List
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                              QPushButton, QGroupBox, QLineEdit,
                              QMessageBox, QTextEdit, QProgressBar,
-                             QGraphicsDropShadowEffect)
+                             QGraphicsDropShadowEffect, QCheckBox)
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QPixmap, QColor
 from core.path_finder import PathFinder
@@ -13,13 +14,23 @@ from utils.config import Config
 from utils.logger import GUILogger
 
 CATEGORIES = {
-    "wheel_sounds": [
-        "sounds/talentcontent/**/*.vsnd_c",
-        "sounds/teamfancontent/**/*.vsnd_c",
-        "sounds/misc/chatwheel/**/*.vsnd_c",
-        "sounds/misc/soundboard/**/*.vsnd_c",
-        "sounds/misc/crownfall/**/*.vsnd_c",
-    ]
+    "wheel_sounds": {
+        "label": "Звуковые фразы колеса чата",
+        "patterns": [
+            ("sounds/talentcontent/**/*.vsnd_c", "sound"),
+            ("sounds/teamfancontent/**/*.vsnd_c", "sound"),
+            ("sounds/misc/chatwheel/**/*.vsnd_c", "sound"),
+            ("sounds/misc/soundboard/**/*.vsnd_c", "sound"),
+            ("sounds/misc/crownfall/**/*.vsnd_c", "sound"),
+        ],
+    },
+    "sprays": {
+        "label": "Граффити (спреи) и их звук",
+        "patterns": [
+            ("materials/particle/sprays/**/*.vtex_c", "texture"),
+            ("sounds/misc/spraypaint.vsnd_c", "sound"),
+        ],
+    },
 }
 
 LOG_COLORS = {
@@ -47,9 +58,10 @@ class ProcessWorker(QThread):
     progress_changed = pyqtSignal(int, int)
     finished_ok = pyqtSignal(bool)
 
-    def __init__(self, dota_path: str, parent=None):
+    def __init__(self, dota_path: str, categories: List[str], parent=None):
         super().__init__(parent)
         self.dota_path = dota_path
+        self.categories = categories
 
     def run(self):
         log = GUILogger()
@@ -57,7 +69,7 @@ class ProcessWorker(QThread):
             from core.processor import SoundProcessor
             processor = SoundProcessor(Path(self.dota_path), "russian", log)
             ok = processor.process_categories(
-                ["wheel_sounds"], CATEGORIES,
+                self.categories, CATEGORIES,
                 on_progress=lambda cur, total: self.progress_changed.emit(cur, total)
             )
         except Exception as e:
@@ -103,13 +115,13 @@ class MainWindow(QWidget):
         title_col.setSpacing(2)
         title = QLabel("Dota 2 Silencer")
         title.setObjectName("title")
-        subtitle = QLabel("Отключение звуковых фраз колеса чата")
+        subtitle = QLabel("Отключение фраз колеса чата и граффити")
         subtitle.setObjectName("subtitle")
         title_col.addWidget(title)
         title_col.addWidget(subtitle)
         header.addLayout(title_col, stretch=1)
 
-        version = QLabel("v2.0")
+        version = QLabel("v2.1")
         version.setObjectName("subtitle")
         header.addWidget(version, alignment=Qt.AlignmentFlag.AlignTop)
         main_layout.addLayout(header)
@@ -136,6 +148,22 @@ class MainWindow(QWidget):
         path_layout.addWidget(self.path_input, stretch=1)
         path_layout.addWidget(self.btn_change_path)
         main_layout.addWidget(path_group)
+
+        categories_group = QGroupBox("Что отключить")
+        self._add_shadow(categories_group)
+        categories_layout = QVBoxLayout(categories_group)
+        categories_layout.setContentsMargins(14, 14, 14, 10)
+        categories_layout.setSpacing(6)
+        self.category_checks: dict = {}
+        for cat_id, category in CATEGORIES.items():
+            check = QCheckBox(category["label"])
+            check.setChecked(bool(self.config.get(f"cat_{cat_id}", True)))
+            check.toggled.connect(
+                lambda state, key=f"cat_{cat_id}": self.config.set(key, bool(state))
+            )
+            self.category_checks[cat_id] = check
+            categories_layout.addWidget(check)
+        main_layout.addWidget(categories_group)
 
         self.btn_start = QPushButton("ПРИМЕНИТЬ МОД")
         self.btn_start.setObjectName("primary")
@@ -230,13 +258,18 @@ class MainWindow(QWidget):
             QMessageBox.warning(self, "Ошибка", "Укажите корректный путь к Dota 2")
             return
 
+        selected = [cat_id for cat_id, check in self.category_checks.items() if check.isChecked()]
+        if not selected:
+            QMessageBox.warning(self, "Ошибка", "Выберите хотя бы одну категорию для отключения.")
+            return
+
         self.log_view.clear()
         self._set_busy(True)
         self.progress_bar.setRange(0, 0)  # режим «занято», пока идёт поиск
         self.progress_bar.setVisible(True)
         self._set_status("Поиск файлов в архиве...", "busy")
 
-        self._worker = ProcessWorker(dota_path, self)
+        self._worker = ProcessWorker(dota_path, selected, self)
         self._worker.progress_changed.connect(self._on_progress)
         self._worker.finished_ok.connect(lambda ok: self._on_finished(ok, dota_path))
         self._worker.start()
@@ -259,7 +292,7 @@ class MainWindow(QWidget):
             msg = (
                 f"✅ Обработка успешно завершена!\n\n"
                 f"📁 Создан архив: {lang_folder}\\pak02_dir.vpk\n\n"
-                f"Звуковые фразы колеса чата отключены для русской версии игры.\n"
+                f"Выбранные категории отключены для русской версии игры.\n"
                 f"Никаких дополнительных параметров запуска не требуется.\n\n"
                 f"💡 Чтобы отключить мод: удалите файл pak02_dir.vpk\n"
                 f"из папки {lang_folder}\n\n"

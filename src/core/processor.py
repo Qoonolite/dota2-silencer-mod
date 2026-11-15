@@ -1,8 +1,13 @@
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Tuple
 from core.vpk_reader import VPKReader
 from core.vpk_writer import VPKWriterV1
 from utils.logger import GUILogger
+
+STUB_FILES = {
+    "sound": "silence_stub.vsnd_c",
+    "texture": "transparent_stub.vtex_c",
+}
 
 
 class SoundProcessor:
@@ -10,16 +15,18 @@ class SoundProcessor:
         self.dota_path = dota_path
         self.log = log
         self.vpk_path = dota_path / "game" / "dota" / "pak01_dir.vpk"
-        self.stub_path = Path(__file__).parent.parent / "assets" / "silence_stub.vsnd_c"
+        self.stubs: Dict[str, bytes] = {}
+        assets_dir = Path(__file__).parent.parent / "assets"
 
-        if not self.stub_path.exists():
-            raise FileNotFoundError(f"Файл заглушки не найден: {self.stub_path}")
+        for stub_name, filename in STUB_FILES.items():
+            stub_path = assets_dir / filename
+            if not stub_path.exists():
+                raise FileNotFoundError(f"Файл заглушки не найден: {stub_path}")
+            with open(stub_path, "rb") as f:
+                self.stubs[stub_name] = f.read()
+            self.log.info(f"Загружена заглушка '{stub_name}' ({len(self.stubs[stub_name])} байт)")
 
-        with open(self.stub_path, "rb") as f:
-            self.stub_data = f.read()
-        self.log.info(f"Загружен файл-заглушка ({len(self.stub_data)} байт)")
-
-    def process_categories(self, categories: List[str], patterns_map: Dict[str, List[str]],
+    def process_categories(self, categories: List[str], categories_map: Dict,
                            on_progress=None) -> bool:
         try:
             self.log.info("Начало поиска файлов в архиве...")
@@ -30,18 +37,17 @@ class SoundProcessor:
 
             vpk_reader = VPKReader(self.vpk_path)
 
-            target_patterns = []
+            # файл -> имя заглушки
+            files_to_replace: Dict[str, str] = {}
             for cat_id in categories:
-                if cat_id in patterns_map:
-                    target_patterns.extend(patterns_map[cat_id])
-
-            files_to_replace = []
-            for pattern in target_patterns:
-                found = vpk_reader.find_files_by_pattern(pattern)
-                self.log.info(f"Паттерн '{pattern}': найдено {len(found)} файлов")
-                files_to_replace.extend(found)
-
-            files_to_replace = list(set(files_to_replace))
+                category = categories_map.get(cat_id)
+                if not category:
+                    continue
+                for pattern, stub_name in category["patterns"]:
+                    found = vpk_reader.find_files_by_pattern(pattern)
+                    self.log.info(f"Паттерн '{pattern}': найдено {len(found)} файлов")
+                    for file_path in found:
+                        files_to_replace.setdefault(file_path, stub_name)
 
             if not files_to_replace:
                 self.log.warning("Файлы для замены не найдены.")
@@ -60,13 +66,14 @@ class SoundProcessor:
                 self.log.info(f"Старый архив удалён: {output_vpk.name}")
 
             writer = VPKWriterV1(output_vpk)
+            items: List[Tuple[str, str]] = sorted(files_to_replace.items())
 
-            for i, file_path in enumerate(files_to_replace):
+            for i, (file_path, stub_name) in enumerate(items):
                 if on_progress:
-                    on_progress(i + 1, len(files_to_replace))
+                    on_progress(i + 1, len(items))
                 if (i + 1) % 100 == 0 or i == 0:
-                    self.log.progress(f"Добавление {i+1}/{len(files_to_replace)}: {file_path}")
-                writer.add_file(file_path, self.stub_data)
+                    self.log.progress(f"Добавление {i+1}/{len(items)}: {file_path}")
+                writer.add_file(file_path, self.stubs[stub_name])
 
             writer.build()
 
