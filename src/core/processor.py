@@ -19,7 +19,8 @@ class SoundProcessor:
             self.stub_data = f.read()
         self.log.info(f"Загружен файл-заглушка ({len(self.stub_data)} байт)")
 
-    def process_categories(self, categories: List[str], patterns_map: Dict[str, List[str]]) -> bool:
+    def process_categories(self, categories: List[str], patterns_map: Dict[str, List[str]],
+                           on_progress=None) -> bool:
         try:
             self.log.info("Начало поиска файлов в архиве...")
 
@@ -61,6 +62,8 @@ class SoundProcessor:
             writer = VPKWriterV1(output_vpk)
 
             for i, file_path in enumerate(files_to_replace):
+                if on_progress:
+                    on_progress(i + 1, len(files_to_replace))
                 if (i + 1) % 100 == 0 or i == 0:
                     self.log.progress(f"Добавление {i+1}/{len(files_to_replace)}: {file_path}")
                 writer.add_file(file_path, self.stub_data)

@@ -6,7 +6,8 @@ from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class GUILogger(QObject):
-    message = pyqtSignal(str)
+    # Сигнал: (уровень, текст). Уровни: info, warning, error, success, progress
+    message = pyqtSignal(str, str)
     
     _instance = None
     
@@ -38,23 +39,23 @@ class GUILogger(QObject):
     
     def info(self, msg: str):
         self.logger.info(msg)
-        self.message.emit(msg)
-    
+        self.message.emit("info", msg)
+
     def warning(self, msg: str):
         self.logger.warning(msg)
-        self.message.emit(f"[ВНИМАНИЕ] {msg}")
-    
+        self.message.emit("warning", msg)
+
     def error(self, msg: str):
         self.logger.error(msg)
-        self.message.emit(f"[ОШИБКА] {msg}")
-    
+        self.message.emit("error", msg)
+
     def debug(self, msg: str):
         self.logger.debug(msg)
-    
+
     def success(self, msg: str):
         self.logger.info(msg)
-        self.message.emit(f"✓ {msg}")
-    
+        self.message.emit("success", msg)
+
     def progress(self, msg: str):
         self.logger.info(msg)
-        self.message.emit(msg)
+        self.message.emit("progress", msg)

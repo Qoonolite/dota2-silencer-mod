@@ -1,178 +1,241 @@
 DARK_THEME = """
-/* Базовые стили Steam */
+/* ===== Google Material 3 — тёмно-серая тема ===== */
+* {
+    font-family: "Google Sans", "Roboto", "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+}
+
 QWidget {
-    background-color: #1b2838;
-    color: #c7d5e0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    font-size: 14px;
+    background-color: #202124;
+    color: #e3e3e3;
 }
 
-QMainWindow {
-    background-color: #1b2838;
+QMainWindow, QDialog {
+    background-color: #202124;
 }
 
-QDialog {
-    background-color: #1b2838;
-}
-
-/* Заголовки */
+/* ===== Текст ===== */
 QLabel {
-    color: #c7d5e0;
-    background-color: transparent;
+    background: transparent;
+    color: #e3e3e3;
 }
 
-/* Кнопки */
-QPushButton {
-    background-color: #2a475e;
-    color: #c7d5e0;
-    border: 1px solid #3d6a8e;
-    border-radius: 2px;
-    padding: 10px 20px;
+QLabel#title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #e8eaed;
+}
+
+QLabel#subtitle {
+    font-size: 13px;
+    color: #9aa0a6;
+}
+
+QLabel#warnLabel {
+    color: #fdd663;
+    background-color: #3a3226;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 12px;
+}
+
+QLabel#statusDot {
     font-size: 14px;
+}
+
+QLabel#statusLabel {
+    color: #9aa0a6;
+    font-size: 12px;
+}
+
+/* ===== Кнопки: outlined (M3) ===== */
+QPushButton {
+    background-color: transparent;
+    color: #a8c7fa;
+    border: 1px solid #8e918f;
+    border-radius: 18px;
+    padding: 8px 20px;
 }
 
 QPushButton:hover {
-    background-color: #3d6a8e;
-    color: #ffffff;
+    background-color: rgba(168, 199, 250, 0.08);
+    border-color: #a8c7fa;
 }
 
 QPushButton:pressed {
-    background-color: #66c0f4;
-    color: #1b2838;
+    background-color: rgba(168, 199, 250, 0.16);
 }
 
-/* Главная кнопка */
+QPushButton:disabled {
+    color: #5f6368;
+    border-color: #3c4043;
+    background-color: transparent;
+}
+
+/* ===== Главная кнопка: filled (M3) ===== */
 QPushButton#primary {
-    background-color: #7ea640;
-    color: #ffffff;
-    border: 1px solid #5a7a2e;
-    border-bottom: 3px solid #4a6525;
-    border-radius: 3px;
-    font-weight: bold;
-    font-size: 18px;
-    padding: 18px 36px;
+    background-color: #a8c7fa;
+    border: none;
+    border-radius: 25px;
+    color: #062e6f;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
 }
 
 QPushButton#primary:hover {
-    background-color: #8fb848;
-    border-color: #6a8a35;
-    border-bottom-color: #5a7a2e;
+    background-color: #c2d7fc;
 }
 
 QPushButton#primary:pressed {
-    background-color: #6d9235;
-    border-bottom: 1px solid #4a6525;
+    background-color: #8ab4f8;
 }
 
-/* Чекбоксы */
-QCheckBox {
-    color: #c7d5e0;
-    spacing: 12px;
-    font-size: 15px;
-    padding: 10px;
+QPushButton#primary:disabled {
+    background-color: #3c4043;
+    color: #8e918f;
 }
 
-QCheckBox:hover {
-    color: #66c0f4;
-}
-
-QCheckBox::indicator {
-    width: 22px;
-    height: 22px;
-    border: 2px solid #3d6a8e;
-    border-radius: 3px;
-    background-color: #1b2838;
-}
-
-QCheckBox::indicator:hover {
-    border-color: #66c0f4;
-}
-
-QCheckBox::indicator:checked {
-    background-color: #7ea640;
-    border: 2px solid #5a7a2e;
-    border-radius: 3px;
-}
-
-/* Поля ввода */
+/* ===== Поля ввода: капсула как поиск Google ===== */
 QLineEdit {
-    background-color: #2a475e;
-    color: #c7d5e0;
-    border: 1px solid #3d6a8e;
-    border-radius: 2px;
-    padding: 10px 14px;
-    font-size: 14px;
+    background-color: #303134;
+    color: #e8eaed;
+    border: 1px solid #3c4043;
+    border-radius: 18px;
+    padding: 8px 16px;
+    selection-background-color: #a8c7fa;
+    selection-color: #062e6f;
 }
 
 QLineEdit:focus {
-    border-color: #66c0f4;
+    border-color: #a8c7fa;
+    background-color: #35373a;
 }
 
 QLineEdit:read-only {
-    background-color: #1b2838;
-    color: #8f98a0;
+    color: #9aa0a6;
 }
 
-/* Группы */
+/* ===== Лог: консоль на самой тёмной поверхности ===== */
+QTextEdit#logView {
+    background-color: #131314;
+    border: 1px solid #3c4043;
+    border-radius: 12px;
+    padding: 8px 10px;
+    font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
+    font-size: 12px;
+    selection-background-color: #a8c7fa;
+    selection-color: #062e6f;
+}
+
+/* ===== Карточки: поверхность без рамки ===== */
 QGroupBox {
-    border: 1px solid #3d6a8e;
-    border-radius: 4px;
-    margin-top: 20px;
-    padding-top: 25px;
-    font-weight: bold;
-    font-size: 16px;
-    color: #66c0f4;
-    background-color: #1b2838;
+    border: none;
+    border-radius: 16px;
+    margin-top: 16px;
+    padding-top: 14px;
+    background-color: #282a2c;
+    color: #9aa0a6;
+    font-weight: 500;
+    font-size: 12px;
 }
 
 QGroupBox::title {
     subcontrol-origin: margin;
-    left: 15px;
-    padding: 0 10px;
-    color: #66c0f4;
-    font-size: 16px;
-    font-weight: bold;
+    left: 14px;
+    padding: 0 6px;
+    color: #9aa0a6;
 }
 
-/* Прогресс-бар */
+/* ===== Прогресс-бар: капсула ===== */
 QProgressBar {
-    border: 1px solid #3d6a8e;
-    border-radius: 2px;
+    background-color: #444746;
+    border: none;
+    border-radius: 6px;
+    height: 12px;
     text-align: center;
-    background-color: #2a475e;
-    color: #c7d5e0;
-    font-weight: bold;
-    height: 28px;
+    color: #062e6f;
+    font-size: 10px;
 }
 
 QProgressBar::chunk {
-    background-color: #66c0f4;
-    border-radius: 2px;
-}
-
-/* Статус-бар */
-QStatusBar {
-    background-color: #171a21;
-    color: #8f98a0;
-    border-top: 1px solid #3d6a8e;
-    font-size: 13px;
-}
-
-/* Скроллбары */
-QScrollBar:vertical {
-    background-color: #2a475e;
-    width: 12px;
+    background-color: #a8c7fa;
     border-radius: 6px;
 }
 
+/* ===== Подвал ===== */
+QWidget#authorCard {
+    background-color: #282a2c;
+    border: none;
+    border-radius: 16px;
+}
+
+QLabel#authorName {
+    color: #9aa0a6;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* ===== Чекбоксы ===== */
+QCheckBox {
+    spacing: 10px;
+    padding: 6px;
+}
+
+QCheckBox:hover {
+    color: #a8c7fa;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #8e918f;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+QCheckBox::indicator:hover {
+    border-color: #a8c7fa;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #a8c7fa;
+    border-color: #a8c7fa;
+}
+
+/* ===== Статус-бар ===== */
+QStatusBar {
+    background-color: #131314;
+    color: #9aa0a6;
+    border-top: 1px solid #3c4043;
+    font-size: 12px;
+}
+
+/* ===== Подсказки ===== */
+QToolTip {
+    background-color: #303134;
+    color: #e8eaed;
+    border: 1px solid #5f6368;
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+/* ===== Скроллбары ===== */
+QScrollBar:vertical {
+    background-color: transparent;
+    width: 10px;
+    margin: 2px;
+}
+
 QScrollBar::handle:vertical {
-    background-color: #3d6a8e;
+    background-color: #5f6368;
     border-radius: 5px;
-    min-height: 20px;
+    min-height: 24px;
 }
 
 QScrollBar::handle:vertical:hover {
-    background-color: #66c0f4;
+    background-color: #9aa0a6;
 }
 
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
@@ -180,22 +243,27 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 }
 
 QScrollBar:horizontal {
-    background-color: #2a475e;
-    height: 12px;
-    border-radius: 6px;
+    background-color: transparent;
+    height: 10px;
+    margin: 2px;
 }
 
 QScrollBar::handle:horizontal {
-    background-color: #3d6a8e;
+    background-color: #5f6368;
     border-radius: 5px;
-    min-width: 20px;
+    min-width: 24px;
 }
 
 QScrollBar::handle:horizontal:hover {
-    background-color: #66c0f4;
+    background-color: #9aa0a6;
 }
 
 QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
     width: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
 }
 """
