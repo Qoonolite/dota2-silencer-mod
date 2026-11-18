@@ -48,9 +48,25 @@ class VPKReader:
                 match = path_regex.search(line)
                 if match:
                     self.file_list.append(match.group(1).replace('\\', '/'))
-            print(f"✓ Загружено {len(self.file_list)} файлов из VPK")
+            print(f"[OK] Загружено {len(self.file_list)} файлов из VPK")
         except Exception as e:
             print(f"Ошибка вызова VRF CLI: {e}")
+
+    def extract(self, output_dir: Path, filters: List[str], decompile: bool = False) -> None:
+        if not self.vrf_cli_path:
+            raise FileNotFoundError("VRF CLI не найден. Извлечение файлов невозможно.")
+        cmd = [
+            str(self.vrf_cli_path), "-i", str(self.vpk_path),
+            "-o", str(output_dir), "-f", ",".join(filters),
+        ]
+        if decompile:
+            cmd.append("-d")
+        cmd.extend(["--threads", "4"])
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, encoding="utf-8", errors="replace"
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"VRF CLI ошибка извлечения: {result.stderr or result.stdout}")
 
     def find_files_by_pattern(self, pattern: str) -> List[str]:
         matches = []

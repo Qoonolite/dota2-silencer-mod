@@ -13,5 +13,5 @@ class App(QMainWindow):
         icon_path = Path(__file__).parent / "assets" / "app_icon.png"
         if icon_path.exists():
             self.setWindowIcon(QIcon(str(icon_path)))
-        self.setMinimumSize(720, 600)
-        self.resize(760, 680)
+        self.setMinimumSize(760, 640)
+        self.resize(860, 780)

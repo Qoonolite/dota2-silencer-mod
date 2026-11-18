@@ -66,5 +66,5 @@ class VPKWriterV1:
             raise RuntimeError(f"vpk.exe не создал файл: {self.output_path}")
 
         size_mb = self.output_path.stat().st_size / (1024 * 1024)
-        print(f"✅ VPK создан: {self.output_path} ({size_mb:.2f} МБ)")
+        print(f"[OK] VPK создан: {self.output_path} ({size_mb:.2f} МБ)")
         return self.output_path

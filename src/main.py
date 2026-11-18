@@ -13,7 +13,7 @@ from ui.styles import DARK_THEME
 def main():
     app = QApplication(sys.argv)
     app.setApplicationName("Dota 2 Sound Silencer")
-    app.setApplicationVersion("1.0")
+    app.setApplicationVersion("2.2")
     app.setStyleSheet(DARK_THEME)
     window = App()
     window.show()

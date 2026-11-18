@@ -51,6 +51,32 @@ class Config:
                 self._data = {}
         else:
             self._data = {}
+        self._migrate()
+
+    def _migrate(self):
+        changed = False
+        legacy_categories = {
+            "cat_wheel_sounds": (
+                "cat_dota_plus",
+                "cat_international",
+                "cat_community",
+                "cat_team_fans",
+                "cat_seasonal_events",
+            ),
+            "cat_sprays": ("cat_sprays",),
+        }
+        for legacy_key, new_keys in legacy_categories.items():
+            if legacy_key not in self._data:
+                continue
+            for key in new_keys:
+                if key not in self._data:
+                    self._data[key] = bool(self._data[legacy_key])
+                    changed = True
+        if "hero_full" not in self._data:
+            self._data["hero_full"] = False
+            changed = True
+        if changed:
+            self.save()
     
     def save(self):
         """Сохраняет настройки в файл."""

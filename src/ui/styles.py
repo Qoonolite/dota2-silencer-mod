@@ -204,6 +204,59 @@ QCheckBox::indicator:checked {
     border-color: #a8c7fa;
 }
 
+/* ===== Список категорий ===== */
+QScrollArea#categoriesScroll {
+    background: transparent;
+    border: none;
+}
+
+QWidget#categoriesContent {
+    background: transparent;
+}
+
+QWidget#categoryCard {
+    background-color: #303134;
+    border: 1px solid #3c4043;
+    border-radius: 12px;
+}
+
+QCheckBox#categoryCheck {
+    font-weight: 500;
+    padding: 2px;
+}
+
+QCheckBox#heroFullCheck {
+    color: #fdd663;
+    font-size: 12px;
+    padding: 2px;
+}
+
+QCheckBox:disabled {
+    color: #5f6368;
+}
+
+QLabel#categoryDescription {
+    color: #9aa0a6;
+    font-size: 11px;
+    padding-bottom: 3px;
+}
+
+QLabel#categoryWarning {
+    color: #fdd663;
+    font-size: 10px;
+    padding-bottom: 2px;
+}
+
+QLabel#warningIcon {
+    color: #fdd663;
+}
+
+QPushButton#compactButton {
+    border-radius: 14px;
+    padding: 5px 12px;
+    font-size: 12px;
+}
+
 /* ===== Статус-бар ===== */
 QStatusBar {
     background-color: #131314;
